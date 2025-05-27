@@ -1,29 +1,43 @@
 import { useState, useEffect } from "react";
-import { TextField, Button, Container, FormControl, Snackbar, Alert, FormLabel } from "@mui/material";
+import { TextField, Button, Container, FormControl, Snackbar, Alert } from "@mui/material";
 import { jsPDF } from "jspdf";
 import background from "./assets/el_ancla_first.jpg";
-import CropImage from "./componentes/crop/cropimage";
-import page2Background from "./assets/el_ancla_empty.jpg"
+// import CropImage from "./componentes/crop/cropimage";
+// import page2Background from "./assets/el_ancla_empty.jpg"
+// import { FormLabel, FormControlLabel, RadioGroup, Radio } from '@mui/material';
 
 function MudanzasForm() {
   const [formData, setFormData] = useState({
-    nombrePropietario: "",
-    telefono: "",
-    email: "",
-    marcaVehiculo: "",
-    tarjetaCirculacion: "",
-    departamento: "",
-    mascotas: "",
-    usoDepto: "",
+    nombreCondominio: "",
+    nombreAdministracion: "",
+    telefonoAdministracion: "",
+    emailAdministracion: "",
+    nombrePresidenteMesaDirectiva: "",
+    telefonoPresidenteMesaDirectiva: "", // Nuevo campo
+    emailPresidenteMesaDirectiva: "",
+    nombreSecretarioMesaDirectiva: "",
+    emailSecretarioMesaDirectiva: "", // Nuevo campo
+    telefonoSecretarioMesaDirectiva: "",
+    nombreTesoreroMesaDirectiva: "",
+    telefonoTesoreroMesaDirectiva: "",
+    emailTesoreroMesaDirectiva: "",
+    nombreVocal1: "",
+    telefonoVocal1: "",
+    emailVocal1: "",
+    nombreVocal2: "",
+    telefonoVocal2: "",
+    emailVocal2: "",
+    cantidadDepartamentosTorre: "",
+    cantidadDepartamentosOcupados: "",
+    cantidadDepartamentosTemporales: "",
   });
 
-  const [imageSrc, setImageSrc] = useState(null);
-  const [croppedImages, setCroppedImages] = useState([]);
+  // const [imageSrc, setImageSrc] = useState(null);
+  // const [croppedImages, setCroppedImages] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // Estado para el Snackbar
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // Mensaje del Snackbar
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // Severidad del Snackbar
-
+  // const [snackbarOpen, setSnackbarOpen] = useState(false);
+  // const [snackbarMessage, setSnackbarMessage] = useState("");
+  // const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
     const img = new Image();
@@ -43,76 +57,140 @@ function MudanzasForm() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImageSrc(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => setImageSrc(reader.result);
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
-  const handleCropComplete = (croppedImage) => {
-    setCroppedImages((prevImages) => [...prevImages, croppedImage]);
-    setImageSrc(null);
-    setSnackbarMessage("Imagen agregada correctamente."); // Mensaje de éxito
-    setSnackbarSeverity("success");
-    setSnackbarOpen(true); // Abre el Snackbar
-  };
+  // const handleCropComplete = (croppedImage) => {
+  //   setCroppedImages((prevImages) => [...prevImages, croppedImage]);
+  //   setImageSrc(null);
+  //   setSnackbarMessage("Imagen agregada correctamente.");
+  //   setSnackbarSeverity("success");
+  //   setSnackbarOpen(true);
+  // };
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false); // Cierra el Snackbar
-  };
+  // const handleSnackbarClose = (event, reason) => {
+  //   if (reason === "clickaway") {
+  //     return;
+  //   }
+  //   setSnackbarOpen(false);
+  // };
 
   const generatePDF = () => {
     const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: "a4" });
 
+    pdf.setFontSize(12);
+    let yPosition = 140;
+    const lineHeight = 15;
+
+    // Primera página
     if (backgroundImage) {
-      pdf.addImage(backgroundImage, "JPEG", 0, 0, 446, 631);
+      pdf.addImage(backgroundImage, "JPEG", 0, 0, 448, 632);
     }
 
-    pdf.text(formData.nombrePropietario, 70, 170);
-    pdf.text(formData.telefono, 70, 230);
-    pdf.text(formData.email, 70, 295);
-    pdf.text(formData.marcaVehiculo, 70, 480);
-    pdf.text(formData.tarjetaCirculacion, 70, 540);
-    pdf.text(formData.departamento, 70, 420);
-    pdf.text(formData.mascotas, 70, 350);
-    if (formData.usoDepto === "alojamientos_temporales") {
-      pdf.text("X", 377, 581); // Coordenadas donde irá la "X" en la casilla de "Alojamientos Temporales"
-    }
-    
-    if (formData.usoDepto === "habitar") {
-      pdf.text("X", 377, 564); // Coordenadas donde irá la "X" en la casilla de "Habitar"
-    }
+// Nuevo título
+  pdf.setFontSize(18); // Puedes ajustar el tamaño de la fuente del título si lo deseas
+  pdf.text(`Datos del condominio`, 155, 120);
+  yPosition += lineHeight; // Ajusta la posición para el siguiente texto
 
-    croppedImages.forEach((img) => {
-      pdf.addPage();
-      pdf.addImage(page2Background, "JPEG", 0, 0, 446, 631);
-      pdf.addImage(img, "PNG", 50, 150, 295, 202);
-    });
+  pdf.setFontSize(12); // Restaura el tamaño de fuente para los datos
 
+    pdf.text(`Nombre del Condominio: ${formData.nombreCondominio}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Nombre de la Administración: ${formData.nombreAdministracion}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Teléfono de la Administración: ${formData.telefonoAdministracion}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Email de la Administración: ${formData.emailAdministracion}`, 25, yPosition);
+    yPosition += lineHeight * 2;
 
-    pdf.save(`Autorizacion_${formData.nombreCompleto}.pdf`);
+    pdf.text(`Presidente de la Mesa Directiva: ${formData.nombrePresidenteMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Teléfono del Presidente: ${formData.telefonoPresidenteMesaDirectiva}`, 25, yPosition); // Nuevo campo
+    yPosition += lineHeight;
+    pdf.text(`Email del Presidente: ${formData.emailPresidenteMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight * 2;
 
-    //Limpiar los campos
+    pdf.text(`Secretario de la Mesa Directiva: ${formData.nombreSecretarioMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Email del Secretario: ${formData.emailSecretarioMesaDirectiva}`, 25, yPosition); // Nuevo campo
+    yPosition += lineHeight;
+    pdf.text(`Teléfono del Secretario: ${formData.telefonoSecretarioMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight * 2;
+
+    pdf.text(`Tesorero de la Mesa Directiva: ${formData.nombreTesoreroMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Teléfono del Tesorero: ${formData.telefonoTesoreroMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Email del Tesorero: ${formData.emailTesoreroMesaDirectiva}`, 25, yPosition);
+    yPosition += lineHeight*2;
+
+    // Segunda página
+    // pdf.addPage();
+    // if (page2Background) {
+    //   pdf.addImage(page2Background, "JPEG", 0, 0, 595, 842);
+    // }
+    // yPosition = 70; // Reinicia la posición Y para la segunda página
+    pdf.text(`Vocal: ${formData.nombreVocal1}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Teléfono del Vocal: ${formData.telefonoVocal1}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Email del Vocal: ${formData.emailVocal1}`, 25, yPosition);
+    yPosition += lineHeight * 2;
+
+    pdf.text(`Vocal: ${formData.nombreVocal2}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Teléfono del Vocal: ${formData.telefonoVocal2}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Email del Vocal: ${formData.emailVocal2}`, 25, yPosition);
+    yPosition += lineHeight * 2;
+
+    pdf.text(`Cantidad de Departamentos en la Torre: ${formData.cantidadDepartamentosTorre}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Cantidad de Departamentos Ocupados: ${formData.cantidadDepartamentosOcupados}`, 25, yPosition);
+    yPosition += lineHeight;
+    pdf.text(`Cantidad de Departamentos para Alojamientos Temporales: ${formData.cantidadDepartamentosTemporales}`, 25, yPosition);
+
+    // Páginas para las imágenes recortadas
+    // croppedImages.forEach((img) => {
+    //   pdf.addPage();
+    //   pdf.addImage(page2Background, "JPEG", 0, 0, 595, 842);
+    //   pdf.addImage(img, "PNG", 50, 150, 295, 202);
+    // });
+
+    pdf.save(`Informacion_Condominio_${formData.nombreCondominio}.pdf`);
+
     setFormData({
-      nombrePropietario: "",
-      telefono: "",
-      nombreCompleto: "",
-      email: "",
-      marcaVehiculo: "",
-      tarjetaCirculacion: "",
-      departamento: "",
-      mascotas: "",
-      notas: "",
-      usoDepto: "",
+      nombreCondominio: "",
+      nombreAdministracion: "",
+      telefonoAdministracion: "",
+      emailAdministracion: "",
+      nombrePresidenteMesaDirectiva: "",
+      telefonoPresidenteMesaDirectiva: "", // Nuevo campo
+      emailPresidenteMesaDirectiva: "",
+      nombreSecretarioMesaDirectiva: "",
+      emailSecretarioMesaDirectiva: "", // Nuevo campo
+      telefonoSecretarioMesaDirectiva: "",
+      nombreTesoreroMesaDirectiva: "",
+      telefonoTesoreroMesaDirectiva: "",
+      emailTesoreroMesaDirectiva: "",
+      nombreVocal1: "",
+      telefonoVocal1: "",
+      emailVocal1: "",
+      nombreVocal2: "",
+      telefonoVocal2: "",
+      emailVocal2: "",
+      cantidadDepartamentosTorre: "",
+      cantidadDepartamentosOcupados: "",
+      cantidadDepartamentosTemporales: "",
     });
 
-    setCroppedImages([]); // Limpiar las imágenes cargadas
+    // setCroppedImages([]);
   };
 
   return (
@@ -120,101 +198,201 @@ function MudanzasForm() {
       <form>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Nombre del Propietario"
-            name="nombrePropietario"
-            value={formData.nombrePropietario}
+            label="Nombre del Condominio"
+            name="nombreCondominio"
+            value={formData.nombreCondominio}
             onChange={handleChange}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Telefono/s de contacto"
-            name="telefono"
-            value={formData.telefono}
+            label="Nombre de la Administración"
+            name="nombreAdministracion"
+            value={formData.nombreAdministracion}
             onChange={handleChange}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Email/s de contacto"
-            name="email"
-            value={formData.email}
+            label="Teléfono de la Administración"
+            name="telefonoAdministracion"
+            value={formData.telefonoAdministracion}
             onChange={handleChange}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Dirección"
-            name="departamento"
-            value={formData.departamento}
+            label="Email de la Administración"
+            name="emailAdministracion"
+            value={formData.emailAdministracion}
             onChange={handleChange}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Mascotas (nombre, raza, color)"
-            name="mascotas"
-            value={formData.mascotas}
+            label="Nombre del Presidente de la Mesa Directiva"
+            name="nombrePresidenteMesaDirectiva"
+            value={formData.nombrePresidenteMesaDirectiva}
             onChange={handleChange}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Marca de Vehículo y placas"
-            name="marcaVehiculo"
-            value={formData.marcaVehiculo}
+            label="Teléfono del Presidente de la Mesa Directiva"
+            name="telefonoPresidenteMesaDirectiva"
+            value={formData.telefonoPresidenteMesaDirectiva}
             onChange={handleChange}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Tarjeta de Circulación (Debe coincidir con placas)"
-            name="tarjetaCirculacion"
-            value={formData.tarjetaCirculacion}
+            label="Correo del Presidente de la Mesa Directiva"
+            name="emailPresidenteMesaDirectiva"
+            value={formData.emailPresidenteMesaDirectiva}
             onChange={handleChange}
           />
-          </FormControl>
-          <FormControl component="fieldset" fullWidth margin="normal">
-            <FormLabel sx={{ color: 'text.primary' }} >Por favor especifique si es:</FormLabel>
-            <div>
-              <input
-                type="checkbox"
-                name="usoDepto"
-                value="alojamientos_temporales"
-                checked={formData.usoDepto === "alojamientos_temporales"}
-                onChange={() => setFormData({ ...formData, usoDepto: "alojamientos_temporales" })}
-              />
-              <FormLabel >Propietario</FormLabel>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                name="usoDepto"
-                value="habitar"
-                checked={formData.usoDepto === "habitar"}
-                onChange={() => setFormData({ ...formData, usoDepto: "habitar" })}
-              />
-              <FormLabel sx={{ '.MuiFormControlLabel-label': { color: 'text.primary' } }}>Inquilino</FormLabel>
-            </div>
-          </FormControl>
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Nombre del Secretario de la Mesa Directiva"
+            name="nombreSecretarioMesaDirectiva"
+            value={formData.nombreSecretarioMesaDirectiva}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Correo del Secretario de la Mesa Directiva"
+            name="emailSecretarioMesaDirectiva"
+            value={formData.emailSecretarioMesaDirectiva}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Teléfono del Secretario de la Mesa Directiva"
+            name="telefonoSecretarioMesaDirectiva"
+            value={formData.telefonoSecretarioMesaDirectiva}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Nombre del Tesorero de la Mesa Directiva"
+            name="nombreTesoreroMesaDirectiva"
+            value={formData.nombreTesoreroMesaDirectiva}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Teléfono del Tesorero de la Mesa Directiva"
+            name="telefonoTesoreroMesaDirectiva"
+            value={formData.telefonoTesoreroMesaDirectiva}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Email del Tesorero de la Mesa Directiva"
+            name="emailTesoreroMesaDirectiva"
+            value={formData.emailTesoreroMesaDirectiva}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Nombre del Vocal"
+            name="nombreVocal1"
+            value={formData.nombreVocal1}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Teléfono del Vocal"
+            name="telefonoVocal1"
+            value={formData.telefonoVocal1}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Email del Vocal"
+            name="emailVocal1"
+            value={formData.emailVocal1}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Nombre del Vocal"
+            name="nombreVocal2"
+            value={formData.nombreVocal2}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Teléfono del Vocal"
+            name="telefonoVocal2"
+            value={formData.telefonoVocal2}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Email del Vocal"
+            name="emailVocal2"
+            value={formData.emailVocal2}
+            onChange={handleChange}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="¿Cuántos departamentos conforman la torre?"
+            name="cantidadDepartamentosTorre"
+            value={formData.cantidadDepartamentosTorre}
+            onChange={handleChange}
+            type="number"
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="¿Cuántos departamentos están en ocupación?"
+            name="cantidadDepartamentosOcupados"
+            value={formData.cantidadDepartamentosOcupados}
+            onChange={handleChange}
+            type="number"
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="¿Cuántos departamentos están destinados para alojamientos temporales?"
+            name="cantidadDepartamentosTemporales"
+            value={formData.cantidadDepartamentosTemporales}
+            onChange={handleChange}
+            type="number"
+          />
+        </FormControl>
 
-        <input type="file"  accept="image/*" onChange={handleImageUpload}/>
+        {/* <input type="file" accept="image/*" onChange={handleImageUpload} style={{ marginTop: '20px' }} />
         {imageSrc && (
           <CropImage
             imageSrc={imageSrc}
             onCropCompleteCallback={handleCropComplete}
             onClose={() => setImageSrc(null)}
           />
-        )}
+        )} */}
         <Button variant="contained" style={{ marginTop: "20px" }} onClick={generatePDF}>
           Generar PDF
-        </Button > 
+        </Button >
         {/* Snackbar para la confirmación */}
-        <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
+        {/* <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
           <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
             {snackbarMessage}
           </Alert>
-        </Snackbar>
+        </Snackbar> */}
       </form>
     </Container>
   );
