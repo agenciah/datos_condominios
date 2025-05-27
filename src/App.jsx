@@ -39,10 +39,10 @@ function App() {
             mb: 2 // Espacio entre los logos y el título
           }}
         >
-          Formulario para propietarios, Condominio El Ancla.
+          Formulario para Condominios, Fraccionamiento El Ancla.
         </Typography>
         <Typography sx={{ color: '#262161', mt: 2 }}>
-          Por favor llena los campos y si cuentas con mascotas, agrega una imagen de tu/s mascota/s. Descarga el pdf con el botón al final de la página y compártela al administrador del condominio.
+          Por favor llena los campos. Descarga el pdf con el botón al final de la página y compártela al administrador del fraccionamiento.
         </Typography>
       </header>
       <Mudanzas_form />
